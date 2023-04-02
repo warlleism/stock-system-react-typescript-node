@@ -9,8 +9,8 @@ Router.post("/read", read)
 
 Router.put("/update", updateData)
 
-Router.post("/", register)
+Router.post("/create", register)
 
-Router.get("/", readAll)
+Router.get("/all", readAll)
 
 module.exports = Router;

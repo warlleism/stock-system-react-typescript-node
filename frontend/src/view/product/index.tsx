@@ -21,7 +21,7 @@ const Product = () => {
     const [editar, setEditar] = useState<boolean>(false);
     const [type, setType] = useState<'cadastrar' | 'editar'>('cadastrar')
 
-    // const { data, isLoading, error } = useGetFetch('https://jsonplaceholder.typicode.com/posts');
+    // const { data, isLoading, error } = useGetFetch('http://localhost:3003/all');
 
     const { isLoading, error, response, postApi } = usePostFetch()
 
@@ -92,7 +92,7 @@ const Product = () => {
                                 </div>
 
                                 <div className='buttom'>
-                                    <div onClick={() => postApi('https://jsonplaceholder.typicode.com/posts', formulario)}>Enviar</div>
+                                    <div onClick={() => postApi('http://localhost:3003/create', formulario)}>Enviar</div>
                                     <div onClick={() => {
                                         setDelete(false)
                                         setEditar(false)

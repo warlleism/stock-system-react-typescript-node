@@ -19,9 +19,6 @@ const usePostFetch = () => {
         setIsLoading(true);
         setError("");
         setResponse({ success: false, data: null });
-
-        console.log(object)
-
         try {
             const response = await fetch(url, {
                 method: "POST",

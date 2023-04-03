@@ -16,6 +16,7 @@ function useGetFetch(url: string, Loading: boolean): FetchState {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                setReload(true)
                 await fetch(url)
                     .then((res) => res.json())
                     .then((data) => setData(data))

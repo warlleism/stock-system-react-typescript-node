@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { Context } from '../context/provider';
 import { Objeto } from "../interfaces/IForm";
 import Swal from 'sweetalert2'
@@ -32,7 +32,7 @@ const usePostFetch = () => {
             Swal.fire({
                 text: 'Sucesso',
                 icon: 'success',
-                confirmButtonText: 'Cool'
+                confirmButtonText: 'Confirmar'
             })
             setReload(false);
         } catch (error) {
@@ -41,7 +41,7 @@ const usePostFetch = () => {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                confirmButtonText: 'Cool'
+                confirmButtonText: 'Confirmar'
             })
         }
     };

@@ -17,7 +17,7 @@ const useDeleteFetch = () => {
         data: null,
     });
 
-    const deleteApi = async (url: string, id: number) => {
+    const deleteApi = async (url: string, id: number | null) => {
         setReload(true);
         setError("");
         setResponse({ success: false, data: null });

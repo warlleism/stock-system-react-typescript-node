@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
+import { Objeto } from '../../interfaces/IForm';
 import useGetFetch from '../../hooks/getCustomHook';
 import usePostFetch from '../../hooks/postCustomHook';
-import { Objeto } from '../../interfaces/IForm';
-import video from "../../image/icons/sucess.mp4";
+import useDeleteFetch from '../../hooks/deleteCustomHook';
 import './style.scss'
 
 type CategoryOption = "Selecione..." | "Hardware" | "Software" | "Periférico" | "Smartphone";
@@ -21,10 +21,9 @@ const Product = () => {
     const [deletar, setDelete] = useState<boolean>(false);
     const [editar, setEditar] = useState<boolean>(false);
     const [type, setType] = useState<'cadastrar' | 'editar'>('cadastrar')
-
-    const { isLoading, error, response, postApi } = usePostFetch()
-
-    const { data } = useGetFetch('http://localhost:3003/all');
+    const { deleteApi } = useDeleteFetch();
+    const { reload, postApi } = usePostFetch()
+    const { data } = useGetFetch('http://localhost:3003/all', reload);
 
     const categoryOptions: CategoryOption[] = [
         "Selecione...",
@@ -71,13 +70,20 @@ const Product = () => {
                         type == 'cadastrar'
                             ?
                             <div className='container-input-new-content'>
+                                <span className="material-symbols-outlined close" onClick={() => {
+                                    setDelete(false)
+                                    setEditar(false)
+                                    setNewContent(false)
+                                }}>
+                                    close
+                                </span>
 
                                 <div className='container-input-title'>
                                     <div>Cadastrar</div>
                                 </div>
                                 <div className='container-input-create-item-child'>
                                     <label>Nome:</label>
-                                    <input onChange={(event) => handlerInput(event)} type="text" name='nome' />
+                                    <input  value={formulario.nome} onChange={(event) => handlerInput(event)} type="text" name='nome' />
                                 </div>
                                 <div className='container-input-create-item-child'>
                                     <label htmlFor="category-select">Categoria:</label>
@@ -96,18 +102,16 @@ const Product = () => {
                                 </div>
                                 <div className='container-input-create-item-child'>
                                     <label>Preço:</label>
-                                    <input onChange={(event) => handlerInput(event)}
-                                        type="number" name='preco' />
+                                    <input  onChange={(event) => handlerInput(event)} type="number" value={formulario.preco} name='preco' />
                                 </div>
                                 <div className='container-input-create-item-child'>
                                     <label>Quantidade:</label>
-                                    <input onChange={(event) => handlerInput(event)}
-                                        type="number" name='quantidade' />
+                                    <input onChange={(event) => handlerInput(event)} type="number" value={formulario.quantidade} name='quantidade' />
                                 </div>
 
                                 <div className='buttom'>
-                                    <button disabled={filterForm()} onClick={() => postApi('http://localhost:3003/create', formulario)}
-                                    >Enviar</button>
+                                    <button disabled={filterForm()} onClick={() => postApi('http://localhost:3003/create', formulario)}>Enviar</button>
+                                    <button onClick={() => setFormulario(defaultForm)}>Limpar</button>
                                     <button onClick={() => {
                                         setDelete(false)
                                         setEditar(false)
@@ -118,12 +122,19 @@ const Product = () => {
                             </div>
                             :
                             <div className='container-input-new-content'>
+                                <span className="material-symbols-outlined close" onClick={() => {
+                                    setDelete(false)
+                                    setEditar(false)
+                                    setNewContent(false)
+                                }}>
+                                    close
+                                </span>
                                 <div className='container-input-title'>
                                     <div>Editar</div>
                                 </div>
                                 <div className='container-input-create-item-child'>
                                     <label>Nome:</label>
-                                    <input onChange={(event) => handlerInput(event)} type="text" name='nome' />
+                                    <input onChange={(event) => handlerInput(event)} value={formulario.nome} type="text" name='nome' />
                                 </div>
                                 <div className='container-input-create-item-child'>
                                     <label htmlFor="category-select">Categoria:</label>
@@ -142,13 +153,11 @@ const Product = () => {
                                 </div>
                                 <div className='container-input-create-item-child'>
                                     <label>Preço:</label>
-                                    <input onChange={(event) => handlerInput(event)}
-                                        type="number" name='preco' />
+                                    <input onChange={(event) => handlerInput(event)} type="number" value={formulario.preco} name='preco' />
                                 </div>
                                 <div className='container-input-create-item-child'>
                                     <label>Quantidade:</label>
-                                    <input onChange={(event) => handlerInput(event)}
-                                        type="number" name='quantidade' />
+                                    <input onChange={(event) => handlerInput(event)} type="number" value={formulario.quantidade} name='quantidade' />
                                 </div>
                                 <div className='buttom'>
                                     <button disabled={filterForm()}>Enviar</button>
@@ -189,7 +198,6 @@ const Product = () => {
                                         onClick={() => {
                                             setEditar(!editar)
                                             setDelete(false)
-
                                         }}>
                                         <span className="material-symbols-outlined">
                                             edit
@@ -219,7 +227,7 @@ const Product = () => {
                                             {
                                                 deletar
                                                     ?
-                                                    <div className='deletar operacoes'>
+                                                    <div className='deletar operacoes' onClick={() => deleteApi('http://localhost:3003/delete', e?.id)}>
                                                     </div>
                                                     :
                                                     false
@@ -239,7 +247,7 @@ const Product = () => {
                                             <div>{e.nome}</div>
                                             <div>{e.categoria}</div>
                                             <div>R${e.preco}</div>
-                                            <div>{e.codigo}</div>
+                                            <div>{e.quantidade}</div>
                                         </div>)
                                 }
                             </div>

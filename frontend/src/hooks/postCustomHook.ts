@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect, useContext } from 'react';
+import { Context } from '../context/provider';
 import { Objeto } from "../interfaces/IForm";
 import Swal from 'sweetalert2'
 
@@ -9,7 +10,7 @@ type ApiResponse = {
 
 const usePostFetch = () => {
 
-    const [isLoading, setIsLoading] = useState(false);
+    const { reload, setReload } = useContext(Context)
     const [error, setError] = useState("");
     const [response] = useState<ApiResponse>({
         success: false,
@@ -17,9 +18,9 @@ const usePostFetch = () => {
     });
 
     const postApi = async (url: string, object: Objeto) => {
-        setIsLoading(true);
+        setReload(true);
         setError("");
-        
+
         try {
             await fetch(url, {
                 method: "POST",
@@ -28,14 +29,14 @@ const usePostFetch = () => {
                     "Content-Type": "application/json",
                 },
             });
-            setIsLoading(true);
             Swal.fire({
                 text: 'Sucesso',
                 icon: 'success',
                 confirmButtonText: 'Cool'
             })
+            setReload(false);
         } catch (error) {
-            setIsLoading(false);
+            setReload(false);
             setError("Ocorreu algum erro");
             Swal.fire({
                 icon: 'error',
@@ -45,7 +46,7 @@ const usePostFetch = () => {
         }
     };
 
-    return { isLoading, error, response, postApi };
+    return { reload, error, response, postApi };
 };
 
 export default usePostFetch;

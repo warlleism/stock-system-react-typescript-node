@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { Context } from '../context/provider';
+
+import Swal from 'sweetalert2'
 
 type ApiResponse = {
     success: boolean;
@@ -7,37 +10,48 @@ type ApiResponse = {
 
 const useDeleteFetch = () => {
 
-    const [isLoading, setIsLoading] = useState(false);
+    const { reload, setReload } = useContext(Context)
     const [error, setError] = useState("");
     const [response, setResponse] = useState<ApiResponse>({
         success: false,
         data: null,
     });
 
-    const postApi = async (url: string, object: []) => {
-        setIsLoading(true);
+    const deleteApi = async (url: string, id: number) => {
+        setReload(true);
         setError("");
         setResponse({ success: false, data: null });
 
         try {
             const response = await fetch(url, {
                 method: "DELETE",
-                body: JSON.stringify(object),
+                body: JSON.stringify({ id: id }),
                 headers: {
                     "Content-Type": "application/json",
                 },
             });
 
             const responseData = await response.json();
-            setIsLoading(false);
+            setReload(false);
             setResponse({ success: true, data: responseData });
+
+            Swal.fire({
+                text: 'Sucesso',
+                icon: 'success',
+                confirmButtonText: 'Confirmar'
+            })
         } catch (error) {
-            setIsLoading(false);
+            setReload(false);
             setError("Ocorreu algum erro");
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                confirmButtonText: 'Confirmar'
+            })
         }
     };
 
-    return { isLoading, error, response, postApi };
+    return { reload, error, response, deleteApi };
 };
 
 export default useDeleteFetch;

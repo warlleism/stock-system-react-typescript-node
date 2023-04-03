@@ -1,15 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { Context } from '../context/provider';
 
 interface FetchState {
-    data: | null;
-    isLoading: boolean;
+    data: | Array<object> | null;
+    reload: boolean;
     error: Error | null;
 }
 
-function useGetFetch(url: string): FetchState {
+function useGetFetch(url: string, Loading: boolean): FetchState {
 
     const [data, setData] = useState<any>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const { reload, setReload } = useContext(Context)
     const [error, setError] = useState<Error | null>(null);
 
     useEffect(() => {
@@ -25,14 +26,14 @@ function useGetFetch(url: string): FetchState {
                     setError(new Error('Ocorreu um erro'));
                 }
             } finally {
-                setIsLoading(false);
+                setReload(false);
             }
         };
 
         fetchData();
-    }, [url]);
+    }, [reload]);
 
-    return { data, isLoading, error };
+    return { data, reload, error };
 }
 
 export default useGetFetch;

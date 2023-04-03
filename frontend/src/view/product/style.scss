@@ -23,6 +23,23 @@
         box-sizing: border-box;
         background-color: #020c20;
 
+        .sucess {
+            top: 0;
+            left: 0;
+            z-index: 9;
+            width: 500px;
+            height: 700px;
+            overflow: hidden;
+            position: absolute;
+            pointer-events: none;
+            background-color: black;
+
+            div {
+                width: 200px;
+                height: 200px;
+            }
+        }
+
         .container-input-title {
             display: flex;
             margin-top: 30px;
@@ -53,7 +70,7 @@
             position: absolute;
             align-items: center;
 
-            div {
+            button {
                 height: 70%;
                 width: 250px;
                 color: #fff;
@@ -62,7 +79,6 @@
                 margin-left: 25px;
                 font-size: 1.3rem;
                 border-radius: 5px;
-
                 letter-spacing: 2px;
                 align-items: center;
                 justify-content: center;
@@ -71,15 +87,24 @@
                 border: solid 2px #ffffff15;
             }
 
-            div:nth-child(2) {
+            button:disabled {
+                cursor: default;
+                background-color: #010818;
+            }
+            button:disabled:hover {
+                background-color: #010818;
+                border: solid 2px #ffffff15;
+
+            }
+
+            button:nth-child(2) {
                 background-color: #0d1627;
 
             }
 
-            div:hover {
+            button:hover {
                 background-color: #021946;
                 border: solid 2px#021946;
-
             }
         }
 

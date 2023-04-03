@@ -8,7 +8,7 @@ interface FetchState {
 
 function useGetFetch(url: string): FetchState {
 
-    const [data, setData] = useState<null>(null);
+    const [data, setData] = useState<any>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<Error | null>(null);
 

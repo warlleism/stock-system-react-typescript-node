@@ -1,8 +1,9 @@
-import { useState } from 'react'
-import './style.scss'
+import { useEffect, useState } from 'react'
 import useGetFetch from '../../hooks/getCustomHook';
 import usePostFetch from '../../hooks/postCustomHook';
 import { Objeto } from '../../interfaces/IForm';
+import video from "../../image/icons/sucess.mp4";
+import './style.scss'
 
 type CategoryOption = "Selecione..." | "Hardware" | "Software" | "Periférico" | "Smartphone";
 
@@ -11,8 +12,8 @@ const Product = () => {
     const defaultForm: Objeto = {
         nome: '',
         categoria: '',
-        preco: false,
-        quantidade: false
+        preco: 0,
+        quantidade: 0
     }
 
     const [formulario, setFormulario] = useState<Objeto>(defaultForm)
@@ -21,11 +22,9 @@ const Product = () => {
     const [editar, setEditar] = useState<boolean>(false);
     const [type, setType] = useState<'cadastrar' | 'editar'>('cadastrar')
 
-    // const { data, isLoading, error } = useGetFetch('http://localhost:3003/all');
-
     const { isLoading, error, response, postApi } = usePostFetch()
 
-    const array = [1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12]
+    const { data } = useGetFetch('http://localhost:3003/all');
 
     const categoryOptions: CategoryOption[] = [
         "Selecione...",
@@ -43,8 +42,22 @@ const Product = () => {
             ...prevFormData,
             [name]: value
         }));
-
     }
+
+    function filterForm() {
+        if (formulario.nome == '' ||
+            formulario.categoria == '' ||
+            formulario.preco == 0 ||
+            formulario.quantidade == 0) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    useEffect(() => {
+        filterForm()
+    }, [])
 
     return (
         <div className='content'>
@@ -58,6 +71,7 @@ const Product = () => {
                         type == 'cadastrar'
                             ?
                             <div className='container-input-new-content'>
+
                                 <div className='container-input-title'>
                                     <div>Cadastrar</div>
                                 </div>
@@ -92,12 +106,14 @@ const Product = () => {
                                 </div>
 
                                 <div className='buttom'>
-                                    <div onClick={() => postApi('http://localhost:3003/create', formulario)}>Enviar</div>
-                                    <div onClick={() => {
+                                    <button disabled={filterForm()} onClick={() => postApi('http://localhost:3003/create', formulario)}
+                                    >Enviar</button>
+                                    <button onClick={() => {
                                         setDelete(false)
                                         setEditar(false)
                                         setNewContent(false)
-                                    }}>CANCELAR</div>
+                                    }}>CANCELAR
+                                    </button>
                                 </div>
                             </div>
                             :
@@ -135,12 +151,12 @@ const Product = () => {
                                         type="number" name='quantidade' />
                                 </div>
                                 <div className='buttom'>
-                                    <div>Enviar</div>
-                                    <div onClick={() => {
+                                    <button disabled={filterForm()}>Enviar</button>
+                                    <button onClick={() => {
                                         setDelete(false)
                                         setEditar(false)
                                         setNewContent(false)
-                                    }}>CANCELAR</div>
+                                    }}>CANCELAR</button>
                                 </div>
                             </div>
                         :
@@ -198,8 +214,8 @@ const Product = () => {
                             </div>
                             <div className='container-item-produto'>
                                 {
-                                    array.map(e =>
-                                        <div className='item-produto'>
+                                    data?.map((e: any) =>
+                                        <div className='item-produto' key={e.id}>
                                             {
                                                 deletar
                                                     ?
@@ -219,11 +235,11 @@ const Product = () => {
                                                     :
                                                     false
                                             }
-                                            <div>1132</div>
-                                            <div>Apple AirPods Pro...</div>
-                                            <div>Eletrónico</div>
-                                            <div>R$12,60</div>
-                                            <div>{e}</div>
+                                            <div>{e.codigo}</div>
+                                            <div>{e.nome}</div>
+                                            <div>{e.categoria}</div>
+                                            <div>R${e.preco}</div>
+                                            <div>{e.codigo}</div>
                                         </div>)
                                 }
                             </div>
